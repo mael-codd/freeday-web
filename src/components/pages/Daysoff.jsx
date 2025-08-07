@@ -37,13 +37,14 @@ class Daysoff extends Component {
             filter,
             defaultFilter,
             daysoff: {},
+            statistics: {},
             formDialog: false,
             dayoffId: null
         };
     }
 
     componentDidMount() {
-    // chargement données page
+        // chargement données page
         DayoffPage.init(this);
     }
 
@@ -62,9 +63,10 @@ class Daysoff extends Component {
     // refresh les données de la page
     refresh = async () => {
         const { filter } = this.state;
-        const daysoffById = await DayoffPage.getDaysoff(filter);
+        const {daysoffById,statistics} = await DayoffPage.getDaysoff(filter);
         this.setState({
-            daysoff: daysoffById
+            daysoff: daysoffById,
+            statistics
         });
     };
 
@@ -143,13 +145,14 @@ class Daysoff extends Component {
             dayoffTypes,
             enabledDayoffTypes,
             filter,
-            dayoffId
+            dayoffId,
+            statistics
         } = this.state;
         const {
             language
         } = this.props;
         if (loading) {
-        // rendu chargement page
+            // rendu chargement page
             return (
                 <div id="content">
                     <Loading />
@@ -180,6 +183,10 @@ class Daysoff extends Component {
                                 onEdit={this.handleFormOpen}
                                 onRefresh={this.refresh}
                             />
+                            <p id='dayoff-statistics'>
+                                {`${'Lang.text("dayoff.statistics.average")'} : ${statistics?.averageDayoffTaken || 0}`}
+                            </p>
+                   
                         </div>
                     </div>
                     <div id="dayoff-bottom" className="content-layout-top dayoff-bottom">

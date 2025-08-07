@@ -181,7 +181,7 @@ class Summary extends Component {
     // refresh données affichées
     async refresh() {
         const { filter } = this.state;
-        const daysoffById = await DayoffPage.getDaysoff(filter);
+        const {daysoffById} = await DayoffPage.getDaysoff(filter);
         this.setState({
             daysoff: daysoffById
         });

@@ -155,7 +155,7 @@ class Schedule extends Component {
     // refresh les données de la page
     refresh = async () => {
         const { filter } = this.state;
-        const daysoffById = await DayoffPage.getDaysoff(filter);
+        const {daysoffById} = await DayoffPage.getDaysoff(filter);
         this.setState({
             daysoff: daysoffById
         });

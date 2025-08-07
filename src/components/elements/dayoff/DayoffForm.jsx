@@ -169,7 +169,7 @@ class DayoffForm extends Component {
                 dayoffId: null
             });
             // update liste absences
-            const daysoff = await DayoffPage.getDaysoff(filter);
+            const {daysoffById: daysoff} = await DayoffPage.getDaysoff(filter);
             handleParentState({ daysoff });
         } catch (err) {
             this.setState({ loading: false });

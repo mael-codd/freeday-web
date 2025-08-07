@@ -19,13 +19,18 @@ const DayoffPage = {
             const dayoffTypes = await DayoffPage.getDayoffTypes(null, true);
             const enabledDayoffTypes = dayoffTypes.filter((dt) => dt.enabled);
             // données absences
-            const daysoff = await DayoffPage.getDaysoff(component.state.filter);
+            const {
+                daysoffById: daysoff,
+                statistics
+            } = await DayoffPage.getDaysoff(component.state.filter);
+
             // callback composant
             component.handleInit({
                 daysoff,
                 dayoffTypes,
                 enabledDayoffTypes,
-                slackUsers
+                slackUsers,
+                statistics
             });
         } catch (err) {
             console.error(err);
@@ -41,18 +46,19 @@ const DayoffPage = {
         try {
             const processedFilter = DayoffPage.processFilter(filterData);
             const daysoffById = {};
+            let statistics = {};
             if (Validator.validateFilter(processedFilter)) {
                 const URLArgs = DayoffPage.getFilterURLArgs(processedFilter);
-                console.log(URLArgs);
-                const result = await API.call({
+                const { daysoff, statistics: resultStats } = await API.call({
                     method: 'GET',
                     url: `/api/daysoff?page=all&order=asc&${URLArgs}`
                 });
-                result.daysoff.forEach((dayoff) => {
+                statistics = resultStats;
+                daysoff.forEach((dayoff) => {
                     daysoffById[dayoff.id] = dayoff;
                 });
             }
-            return daysoffById;
+            return { daysoffById, statistics };
         } catch (err) {
             console.error(err.message);
             throw new Error(Lang.text('dayoff.error.list'));
